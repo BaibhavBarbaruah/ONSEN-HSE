@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "Please cite the associated Biology Open article when using this code or processed data."
+title: "ONSEN HSE regulatory-architecture analyses"
+type: software
+authors:
+  - family-names: Barbaruah
+    given-names: Baibhav R.
+  - family-names: Airalangga
+    given-names: Rahmadani P.
+  - family-names: Ito
+    given-names: Hidetaka
+repository-code: "https://github.com/BaibhavBarbaruah/ONSEN-HSE"
+date-released: 2026-07-14
+license: MIT

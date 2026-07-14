@@ -1,0 +1,32 @@
+display_item	analysis	responsible_code	required_inputs	generated_outputs	status
+Fig. 1A	Native/designed sequence schematic	01_native_mutated_motif_analysis.R	ONSEN_49bp_sequences.fasta; ONSEN_HSE_units_and_substitutions.csv	Fig1A_native_designed_sequence.pdf/png	covered
+Fig. 1B	TF-family motif-position hits	01_native_mutated_motif_analysis.R	native_vs_mutated_49bp_TF_motif_hits_annotated.csv	Fig1B_family_hit_counts.pdf/png	covered
+Fig. 2A-D	Motif-model best-score heatmaps	01_native_mutated_motif_analysis.R	native_vs_mutated_49bp_ALL_window_scores_unfiltered.csv; Tables S2-S3	Fig2A-D individual PDF/PNG panels	covered
+Fig. 3A-B	HSF hits in sixteen Col-0 windows	03_col0_HSF_and_TE_background.R	Col-0 window coordinates/FASTA; JASPAR HSF hits	Fig3A/Fig3B PDF/PNG	covered
+Fig. 3C	ONSEN versus strict TE background	03_col0_HSF_and_TE_background.R	strict_TE_only_background_coordinates.csv; HSF summaries	Fig3C PDF/PNG	covered
+Fig. 3D	HSF-rich TE outlier families	03_col0_HSF_and_TE_background.R	strict_TE_background_annotated_with_HSF_outlier_classes.csv	Fig3D PDF/PNG	covered
+Fig. 4A	Ordinary TE methylation control	05_methylation_analysis.R	GSM1085222 methylome; 1,942 strict TE coordinates	Fig4A PDF/PNG	covered
+Fig. 4B	Locus methylation heatmap	05_methylation_analysis.R	ONSEN and HSF-rich TE coordinates; GSM1085222	Fig4B PDF/PNG	covered
+Fig. 4C	HSF density versus CHH methylation	05_methylation_analysis.R	locus methylation and HSF density	Fig4C PDF/PNG	covered
+Fig. 4D	Aggregate CHH profile	05_methylation_analysis.R	GSM1085222; candidate regions plus 250-bp flanks	Fig4D PDF/PNG	covered
+Fig. 5A	Heat-marker RNA-seq	06_rnaseq_analysis.R	gene counts; sample metadata; DESeq2	Fig5A PDF/PNG	covered
+Fig. 5B-C	Candidate-window RNA-seq signal	06_rnaseq_analysis.R	fractional multimapping counts; library summaries	Fig5B/Fig5C PDF/PNG	covered
+Fig. 6	Natural 49-bp sequence variants	07_accession_analysis.R	natural variant summary/candidate sequences	Fig6 PDF/PNG	covered
+Fig. 7A-B	Natural HSF/TF-family compatibility	07_accession_analysis.R	fixed HSF scans; variant family summaries	Fig7A/Fig7B PDF/PNG	covered
+Fig. S1A-C	Accession candidate abundance/HSF/proxies	07_accession_analysis.R	fixed accession summaries; paired proxy summary	FigS1A-C PDF/PNG	covered
+Fig. S2A-C	Accession HSE architecture summaries	07_accession_analysis.R	candidate architecture and fixed HSF results	FigS2A-C PDF/PNG	covered
+Fig. S3A-C	Constrained-mutant sensitivity	02_constrained_mutant_sensitivity.R	Step2B/Step2C outputs or regenerated libraries	FigS3A-C PDF/PNG	covered
+Fig. S4	Raw versus non-redundant HSF locations	04_nonredundant_HSF_locations.R	49-bp/copy-wide HSF hit tables	FigS4 PDF/PNG	covered
+Table S1	Motif effects and family summary	01_native_mutated_motif_analysis.R; 08_write_supplementary_tables.R	motif hits/gain-loss/family summaries	Table_S1.xlsx	covered
+Table S2	HSF models lost	01_native_mutated_motif_analysis.R; 08_write_supplementary_tables.R	HSF best scores	Table_S2.xlsx	covered
+Table S3	AP2/ERF models gained/strengthened	01_native_mutated_motif_analysis.R; 08_write_supplementary_tables.R	motif gain/loss	Table_S3.xlsx	covered
+Table S4	Col-0 copy-wide HSF summary	03_col0_HSF_and_TE_background.R; 08_write_supplementary_tables.R	Col-0 HSF summary	Table_S4.xlsx	covered
+Table S5	Strict TE background robustness	03_col0_HSF_and_TE_background.R; 08_write_supplementary_tables.R	threshold summaries/statistics	Table_S5.xlsx	covered
+Table S6	Methylation summaries and ordinary control	05_methylation_analysis.R; 08_write_supplementary_tables.R	methylation locus/class/statistics outputs	Table_S6.xlsx	covered
+Table S7	RNA-seq candidate-window summaries	06_rnaseq_analysis.R; 08_write_supplementary_tables.R	candidate class/window signal	Table_S7.xlsx	covered
+Table S8	Accession candidate/proxy summary	07_accession_analysis.R; 08_write_supplementary_tables.R	accession fixed summary/proxy summary	Table_S8.xlsx	covered
+Table S9	Natural seed variants	07_accession_analysis.R; 08_write_supplementary_tables.R	variant accession summary	Table_S9.xlsx	covered
+Table S10	Natural TF-family summary	07_accession_analysis.R; 08_write_supplementary_tables.R	natural variant TF-family summary	Table_S10.xlsx	covered
+Table S11	Published accession evidence synthesis	Table_S11.xlsx; 08_write_supplementary_tables.R	manual literature synthesis with cited sources	Table_S11.xlsx	covered; manual literature table
+Table S12	Constrained-mutant/exact-GC control	02_constrained_mutant_sensitivity.R; 08_write_supplementary_tables.R	Step2B/Step2C outputs	Table_S12.xlsx	covered
+Table S13	Non-redundant HSF locations	04_nonredundant_HSF_locations.R; 08_write_supplementary_tables.R	merged HSF interval outputs	Table_S13.xlsx	covered

@@ -1,0 +1,7 @@
+sample_id,treatment,condition,replicate,bam_filename,fastq_R1,fastq_R2
+Col0_NS_rep1,NS,Col-0 non-stressed,1,Col0_NS_rep1.bam,,
+Col0_NS_rep2,NS,Col-0 non-stressed,2,Col0_NS_rep2.bam,,
+Col0_NS_rep3,NS,Col-0 non-stressed,3,Col0_NS_rep3.bam,,
+Col0_HS_24h_37C_rep1,HS,Col-0 24-h 37C heat stress,1,Col0_HS_24h_37C_rep1.bam,,
+Col0_HS_24h_37C_rep2,HS,Col-0 24-h 37C heat stress,2,Col0_HS_24h_37C_rep2.bam,,
+Col0_HS_24h_37C_rep3,HS,Col-0 24-h 37C heat stress,3,Col0_HS_24h_37C_rep3.bam,,
