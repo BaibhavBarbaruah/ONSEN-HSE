@@ -163,15 +163,6 @@ The representative Fig. 7D logos use:
 - HSF family: **HSFC1, JASPAR MA1667.2**
 - DOF family: **DOF1.8, JASPAR MA0981.2**
 
-## Interpretation limits
-
-- Motif matches and logos represent predicted sequence compatibility/PWM preferences; they do not establish transcription-factor binding or regulatory activity in vivo.
-- Overlapping HSF PWM-model matches are not independent binding sites; merged non-redundant intervals are reported separately.
-- The public methylome is from unstressed Col-0 leaves and describes basal methylation context, not heat-induced methylation change.
-- Candidate-window RNA-seq signal is multimapping-aware and is not interpreted as unambiguous copy-specific expression.
-- The accession survey used a Col-0-derived 49-bp seed with up to four mismatches and can miss more divergent ONSEN-related sequences.
-- Paired HSE/LTR candidates are structural proxies, not definitive copy-number calls.
-- Broad all-family motif counts and the separately validated family-focused constrained-mutant counts are distinct analyses and should not be interchanged; see `REPRODUCIBILITY_NOTES.md`.
 
 ## Data availability
 
