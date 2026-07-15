@@ -2,7 +2,7 @@
 
 cran_packages <- c(
   "data.table", "dplyr", "tidyr", "readr", "stringr", "purrr", "tibble",
-  "ggplot2", "forcats", "scales", "patchwork", "matrixStats",
+  "ggplot2", "ggseqlogo", "forcats", "scales", "patchwork", "matrixStats",
   "openxlsx", "readxl"
 )
 
