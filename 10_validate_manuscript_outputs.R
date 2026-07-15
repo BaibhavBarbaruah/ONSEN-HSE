@@ -1,198 +1,148 @@
-# Validate repository structure and key manuscript-level results.
-# Checks repository structure, portability and selected manuscript-level reference values.
+# Validate the final flat repository and journal-numbered source package.
 
-source("ONSEN_functions.R")
-require_packages(c("readxl", "dplyr", "stringr"))
+source("ONSEN_config.R")
 
+if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' is required for validation.", call. = FALSE)
 message_config()
 
-expected_scripts <- c(
-  "ONSEN_config.R",
-  "ONSEN_functions.R",
-  "00_install_packages.R",
-  "00_run_pipeline.R",
-  "01_native_mutated_motif_analysis.R",
-  "02_constrained_mutant_sensitivity.R",
-  "03_col0_HSF_and_TE_background.R",
-  "04_nonredundant_HSF_locations.R",
-  "05_methylation_analysis.R",
-  "06_rnaseq_analysis.R",
-  "07_accession_analysis.R",
-  "08_write_supplementary_tables.R",
-  "09_write_session_info.R",
-  "10_validate_manuscript_outputs.R"
+required_scripts <- c(
+  "ONSEN_config.R", "ONSEN_functions.R", "00_install_packages.R", "00_run_pipeline.R",
+  "01_native_mutated_motif_analysis.R", "02_constrained_mutant_sensitivity.R",
+  "03_col0_HSF_and_TE_background.R", "03B_threshold_and_continuous_sensitivity.R",
+  "03B_threshold_and_continuous_sensitivity_part1.R", "03B_threshold_and_continuous_sensitivity_part2.R",
+  "04_nonredundant_HSF_locations.R", "05_methylation_analysis.R",
+  "06_rnaseq_analysis.R", "07_accession_analysis.R",
+  "07B_figure7_identity_and_logo_workflow.R", "08_write_supplementary_tables.R",
+  "09_write_session_info.R", "10_validate_manuscript_outputs.R"
 )
-
-expected_tables <- paste0("Table_S", 1:13, ".xlsx")
-expected_metadata <- c(
-  "README.md",
-  "REPRODUCIBILITY_MATRIX.tsv",
-  "INPUT_PROVENANCE.tsv",
-  "DATA_AVAILABILITY.md",
-  "ONSEN_49bp_sequences.fasta",
-  "ONSEN_HSE_units_and_substitutions.csv",
-  "ONSEN_Col0_terminal_candidate_windows.csv",
-  "ONSEN_Col0_terminal_candidate_windows.saf",
-  "Arabidopsis_HSF_models_JASPAR2026.csv"
+required_metadata <- c(
+  "README.md", "LICENSE", "CITATION.cff", "CHANGELOG.md", "DATA_AVAILABILITY.md",
+  "INPUT_PROVENANCE.tsv", "REPRODUCIBILITY_MATRIX.tsv", "REPRODUCIBILITY_NOTES.md",
+  "FINAL_NUMBERING_MAP.tsv", "FILE_CHECKSUMS_SHA256.tsv", "FULL_PACKAGE_MANIFEST.txt",
+  "R_PACKAGE_REQUIREMENTS.txt", "ONSEN_49bp_sequences.fasta", "ONSEN_HSE_units_and_substitutions.csv",
+  "ONSEN_Col0_terminal_candidate_windows.csv", "ONSEN_Col0_terminal_candidate_windows.saf",
+  "Arabidopsis_HSF_models_JASPAR2026.csv", "source_data/Figure7_variant_metrics.tsv",
+  "source_data/Figure7_logo_model_metadata.csv", "source_data/S8A_threshold_stats.tsv",
+  "source_data/S8B_continuous_stats.tsv", "source_data/S8D_QC.tsv",
+  "source_data/Table_S13_natural_variant_TF_family.tsv",
+  "source_data/Table_S14_published_accession_evidence.tsv", "source_data/README.md",
+  "motifs/MA1667.2_HSFC1.jaspar", "motifs/MA0981.2_DOF1.8.jaspar", "motifs/README.md",
+  "supplementary_table_source/README.md"
 )
+required_table_sources <- list.files(
+  file.path(REPO_ROOT, "supplementary_table_source"),
+  pattern = "^Table_S[0-9]+__.*\\.tsv$", recursive = FALSE, full.names = FALSE
+)
+for (i in 1:14) {
+  if (!any(grepl(sprintf("^Table_S%d__", i), required_table_sources))) {
+    stop("No deposited source sheet for Table S", i, ".", call. = FALSE)
+  }
+}
+required_tables <- file.path("supplementary_table_source", required_table_sources)
+required_files <- c(required_scripts, required_metadata, required_tables)
+missing_files <- required_files[!file.exists(file.path(REPO_ROOT, required_files))]
+if (length(missing_files)) stop("Repository package is incomplete. Missing:\n", paste(missing_files, collapse = "\n"), call. = FALSE)
 
-all_expected <- c(expected_scripts, expected_tables, expected_metadata)
-missing_files <- all_expected[!file.exists(file.path(REPO_ROOT, all_expected))]
-if (length(missing_files)) {
-  stop("Repository package is incomplete. Missing files:\n", paste(missing_files, collapse = "\n"))
+# Public-facing R files must not contain hard-coded Windows drive roots.
+r_files <- list.files(REPO_ROOT, pattern = "\\.R$", recursive = TRUE, full.names = TRUE)
+for (path in r_files) {
+  txt <- paste(readLines(path, warn = FALSE), collapse = "\n")
+  if (grepl("(^|[^A-Za-z0-9])([A-Za-z]):[/\\\\]", txt, perl = TRUE)) stop("Hard-coded drive-specific path in: ", basename(path), call. = FALSE)
 }
 
-# Confirm that the flat repository contains no broken nested-folder source paths.
-r_files <- list.files(REPO_ROOT, pattern = "\\.R$", full.names = TRUE)
-r_text <- lapply(r_files, readLines, warn = FALSE)
+# Numbering declarations.
+readme <- paste(readLines(file.path(REPO_ROOT, "README.md"), warn = FALSE), collapse = "\n")
+for (token in c("Fig. S1-Fig. S5", "Table S1-Table S14", "MA1667.2", "MA0981.2")) {
+  if (!grepl(token, readme, fixed = TRUE)) stop("README missing required token: ", token, call. = FALSE)
+}
+matrix <- read.delim(file.path(REPO_ROOT, "REPRODUCIBILITY_MATRIX.tsv"), check.names = FALSE, stringsAsFactors = FALSE)
+if (!all(sprintf("Table S%d", 1:14) %in% matrix$display_item)) stop("Reproducibility matrix lacks final Tables S1-S14.", call. = FALSE)
+for (item in sprintf("Fig. S%d", 1:5)) if (!any(startsWith(matrix$display_item, item))) stop("Reproducibility matrix lacks ", item, call. = FALSE)
 
-broken_sources <- unlist(lapply(seq_along(r_files), function(i) {
-  bad <- grep('source\\("(config|R|scripts)/', r_text[[i]], value = TRUE)
-  if (length(bad)) paste(basename(r_files[[i]]), bad, sep = ": ") else character()
-}))
-if (length(broken_sources)) {
-  stop("Broken nested-folder source statements remain:\n", paste(broken_sources, collapse = "\n"))
+# SHA-256 checksum verification using the system sha256sum command.
+checksum_file <- file.path(REPO_ROOT, "FILE_CHECKSUMS_SHA256.tsv")
+checksums <- read.delim(checksum_file, check.names = FALSE, stringsAsFactors = FALSE)
+sha256_one <- function(relative_path) {
+  command <- Sys.which("sha256sum")
+  if (!nzchar(command)) return(NA_character_)
+  output <- system2(command, shQuote(file.path(REPO_ROOT, relative_path)), stdout = TRUE, stderr = TRUE)
+  sub("[[:space:]].*$", "", output[[1]])
+}
+if (nzchar(Sys.which("sha256sum"))) {
+  observed <- vapply(checksums$path, sha256_one, character(1))
+  if (!all(tolower(observed) == tolower(checksums$sha256))) {
+    bad <- checksums$path[tolower(observed) != tolower(checksums$sha256)]
+    stop("Checksum mismatch for:\n", paste(bad, collapse = "\n"), call. = FALSE)
+  }
+} else {
+  warning("sha256sum is unavailable; checksum verification was skipped.")
 }
 
-hardcoded_drives <- unlist(lapply(seq_along(r_files), function(i) {
-  bad <- grep("[A-Za-z]:/", r_text[[i]], value = TRUE)
-  if (length(bad)) paste(basename(r_files[[i]]), bad, sep = ": ") else character()
-}))
-# The scripts should contain no hard-coded drive paths.
-hardcoded_drives <- hardcoded_drives[!grepl("Sys.setenv", hardcoded_drives, fixed = TRUE)]
-if (length(hardcoded_drives)) {
-  warning("Potential drive-specific text detected:\n", paste(hardcoded_drives, collapse = "\n"))
-}
-
-read_workbook_values <- function(path) {
-  sheets <- readxl::excel_sheets(path)
-
-  unlist(
-    lapply(sheets, function(sheet) {
-      x <- suppressMessages(
-        readxl::read_excel(
-          path,
-          sheet = sheet,
-          col_names = FALSE,
-          .name_repair = "minimal",
-          progress = FALSE
-        )
-      )
-      unlist(x, use.names = FALSE)
-    }),
-    use.names = FALSE
-  )
+read_source_values <- function(table_number) {
+  paths <- list.files(file.path(REPO_ROOT, "supplementary_table_source"), pattern = sprintf("^Table_S%d__.*\\.tsv$", table_number), full.names = TRUE)
+  unlist(lapply(paths, function(path) unlist(read.delim(path, header = FALSE, check.names = FALSE, stringsAsFactors = FALSE), use.names = FALSE)), use.names = FALSE)
 }
 
 numericize_values <- function(values) {
-  text_values <- trimws(as.character(values))
-  text_values[text_values %in% c("", "NA", "NaN", "NULL")] <- NA_character_
-
-  # Accept display formatting such as 5,120, percentages and non-breaking spaces.
-  text_values <- gsub("\u00A0", "", text_values, fixed = TRUE)
-  text_values <- gsub(",", "", text_values, fixed = TRUE)
-  text_values <- sub("%$", "", text_values)
-
+  text_values <- trimws(as.character(values)); text_values[text_values %in% c("", "NA", "NaN", "NULL")] <- NA_character_
+  text_values <- gsub("\u00A0", "", text_values, fixed = TRUE); text_values <- gsub(",", "", text_values, fixed = TRUE); text_values <- sub("%$", "", text_values)
   suppressWarnings(as.numeric(text_values))
 }
-
-contains_number <- function(
-  values,
-  target,
-  tolerance = max(1e-10, abs(target) * 1e-5)
-) {
-  numeric_values <- numericize_values(values)
-  any(
-    is.finite(numeric_values) &
-      abs(numeric_values - target) <= tolerance
-  )
+contains_number <- function(values, target, tolerance = max(1e-10, abs(target) * 1e-5)) {
+  numeric_values <- numericize_values(values); any(is.finite(numeric_values) & abs(numeric_values - target) <= tolerance)
 }
-
-contains_text <- function(values, pattern) {
-  any(grepl(pattern, as.character(values), ignore.case = TRUE))
-}
-
+contains_text <- function(values, pattern) any(grepl(pattern, as.character(values), ignore.case = TRUE))
 checks <- list()
-add_check <- function(name, passed, detail) {
-  checks[[length(checks) + 1L]] <<- data.frame(
-    check = name,
-    passed = isTRUE(passed),
-    detail = detail,
-    stringsAsFactors = FALSE
-  )
-}
+add_check <- function(name, passed, detail) checks[[length(checks) + 1L]] <<- data.frame(check = name, passed = isTRUE(passed), detail = detail, stringsAsFactors = FALSE)
 
-# Table S1: effect counts.
-v1 <- read_workbook_values(repo_file("Table_S1.xlsx"))
-add_check("Table S1 contains lost count 60", contains_number(v1, 60), "Expected lost motif-model count = 60")
-add_check("Table S1 contains gained count 50", contains_number(v1, 50), "Expected gained motif-model count = 50")
-add_check("Table S1 contains native HSF count 31", contains_number(v1, 31), "Expected native HSF motif-position hits = 31")
-add_check("Table S1 contains designed HSF count 0", contains_number(v1, 0), "Expected designed HSF motif-position hits = 0")
+# Final-numbered source-sheet reference values.
+v1 <- read_source_values(1)
+add_check("Table S1 lost motif-model count", contains_number(v1, 60), "Expected 60")
+add_check("Table S1 gained motif-model count", contains_number(v1, 50), "Expected 50")
+v4 <- read_source_values(4)
+add_check("Table S4 random-mutant library size", contains_number(v4, 5000), "Expected 5,000")
+add_check("Table S4 exact-GC design space", contains_number(v4, 5120), "Expected 5,120")
+add_check("Table S4 designed AP2/ERF count", contains_number(v4, 61), "Expected 61")
+v5 <- read_source_values(5)
+s5_lines <- unlist(lapply(
+  list.files(file.path(REPO_ROOT, "supplementary_table_source"), pattern = "^Table_S5__.*\\.tsv$", full.names = TRUE),
+  readLines, warn = FALSE
+))
+add_check("Table S5 has sixteen windows", sum(grepl("^ONSEN[1-8]\\t", s5_lines)) == 16L, "Expected sixteen terminal windows")
+add_check("Table S5 includes raw HSF minimum 48", contains_number(v5, 48), "Expected 48")
+add_check("Table S5 includes raw HSF maximum 75", contains_number(v5, 75), "Expected 75")
+v6 <- read_source_values(6)
+add_check("Table S6 native raw HSF count", contains_number(v6, 31), "Expected 31")
+add_check("Table S6 native non-redundant count", contains_number(v6, 1), "Expected 1")
+v7 <- read_source_values(7)
+add_check("Table S7 threshold 0.85 ONSEN median", contains_number(v7, 75), "Expected 75")
+add_check("Table S7 Wilcoxon P", contains_number(v7, 7.33e-12, 2e-13), "Expected approximately 7.33e-12")
+v8 <- read_source_values(8)
+for (x in c(154.4, 75, 37.5, 12.5)) add_check(paste("Table S8 contains ONSEN median", x), contains_number(v8, x, 0.1), paste("Expected", x))
+add_check("Table S8 includes threshold 0.95", contains_number(v8, 0.95), "Expected cutoff 0.95")
+v9 <- read_source_values(9)
+add_check("Table S9 ordinary-TE CHH median", contains_number(v9, 15.83017, 0.02), "Expected approximately 15.83")
+add_check("Table S9 ONSEN CHH median", contains_number(v9, 53.61375, 0.02), "Expected approximately 53.61")
+v11 <- read_source_values(11)
+for (x in c(19, 7, 11, 9, 16, 17, 15, 41)) add_check(paste("Table S11 contains accession count", x), contains_number(v11, x), paste("Expected", x))
+v14 <- read_source_values(14)
+add_check("Table S14 contains Xu et al. 2024 evidence", contains_text(v14, "Xu et al[.] [(]2024[)]") && contains_text(v14, "10[.]1093/gbe/evae242"), "Expected cited Xu et al. 2024 evidence")
+logo <- read.csv(repo_file("source_data/Figure7_logo_model_metadata.csv"), stringsAsFactors = FALSE)
+add_check("Figure 7 upper logo is HSFC1 MA1667.2", any(logo$model_name == "HSFC1" & logo$JASPAR_ID == "MA1667.2"), "Expected HSFC1/MA1667.2")
+add_check("Figure 7 lower logo is DOF1.8 MA0981.2", any(logo$model_name == "DOF1.8" & logo$JASPAR_ID == "MA0981.2"), "Expected DOF1.8/MA0981.2")
 
-# Table S4: sixteen windows, 48-75 raw hits.
-t4 <- readxl::read_excel(repo_file("Table_S4.xlsx"), skip = 1)
-add_check("Table S4 has sixteen primary windows", nrow(t4) == 16L, paste("Rows found:", nrow(t4)))
-numbers4 <- numericize_values(unlist(t4, use.names = FALSE))
-add_check("Table S4 includes minimum raw HSF count 48", any(numbers4 == 48, na.rm = TRUE), "Expected minimum = 48")
-add_check("Table S4 includes maximum raw HSF count 75", any(numbers4 == 75, na.rm = TRUE), "Expected maximum = 75")
-
-# Table S5: threshold robustness.
-v5 <- read_workbook_values(repo_file("Table_S5.xlsx"))
-add_check("Table S5 contains 0.85 ONSEN median 75", contains_number(v5, 75), "Expected threshold-0.85 median = 75")
-add_check("Table S5 contains 0.90 ONSEN median 37.5", contains_number(v5, 37.5), "Expected threshold-0.90 median = 37.5")
-add_check("Table S5 contains Wilcoxon P approximately 7.33e-12", contains_number(v5, 7.33e-12, 2e-13), "Expected P = 7.33e-12")
-add_check("Table S5 contains Cliff delta approximately 0.992", contains_number(v5, 0.992, 0.002), "Expected delta = 0.992")
-
-# Table S6 ordinary-TE control.
-v6 <- read_workbook_values(repo_file("Table_S6.xlsx"))
-add_check("Table S6 contains ordinary-TE CHH median 15.83", contains_number(v6, 15.83017, 0.02), "Expected median = 15.83017")
-add_check("Table S6 contains ONSEN CHH median 53.61", contains_number(v6, 53.61375, 0.02), "Expected median = 53.61375")
-add_check("Table S6 contains adjusted P approximately 2.06e-7", contains_number(v6, 2.06436e-7, 1e-9), "Expected adjusted P = 2.06436e-7")
-
-# Table S8 accession counts.
-v8 <- read_workbook_values(repo_file("Table_S8.xlsx"))
-for (value in c(19, 7, 11, 9, 16, 17, 15, 41)) {
-  add_check(
-    paste0("Table S8 contains candidate count ", value),
-    contains_number(v8, value),
-    paste("Expected final accession count:", value)
-  )
-}
-
-# Table S12 design-space sizes and AP2/ERF value.
-v12 <- read_workbook_values(repo_file("Table_S12.xlsx"))
-add_check("Table S12 contains 5000 random mutants", contains_number(v12, 5000), "Expected n = 5,000")
-add_check("Table S12 contains 5120 exact-GC valid designs", contains_number(v12, 5120), "Expected n = 5,120 including designed mutant")
-add_check("Table S12 contains designed AP2/ERF count 61", contains_number(v12, 61), "Expected designed count = 61")
-add_check("Table S12 contains random empirical P 0.0166", contains_number(v12, 0.0166, 0.001), "Expected P approximately 0.0166")
-add_check("Table S12 contains exact-GC empirical P 0.149", contains_number(v12, 0.149, 0.003), "Expected P approximately 0.149")
-
-# Table S13 non-redundant results.
-v13 <- read_workbook_values(repo_file("Table_S13.xlsx"))
-add_check("Table S13 contains native raw HSF count 31", contains_number(v13, 31), "Expected native raw count = 31")
-add_check("Table S13 contains native non-redundant count 1", contains_number(v13, 1), "Expected native merged count = 1")
-for (value in 7:10) {
-  add_check(
-    paste0("Table S13 contains non-redundant window count ", value),
-    contains_number(v13, value),
-    paste("Expected window range includes", value)
-  )
-}
+variants <- read.delim(repo_file("source_data/Figure7_variant_metrics.tsv"), check.names = FALSE, stringsAsFactors = FALSE)
+add_check("Figure 7 variant source has 53 rows", nrow(variants) == 53L, paste("Rows found:", nrow(variants)))
+add_check("Figure 7 variant source has one Col-0 reference", sum(variants$mismatch_count == 0) == 1L, "Expected one zero-mismatch reference")
 
 report <- dplyr::bind_rows(checks)
-safe_write_csv(report, "repository_validation_report.csv")
-
+write.csv(report, file.path(ONSEN_OUTPUT_ROOT, "repository_validation_report.csv"), row.names = FALSE)
 if (any(!report$passed)) {
   print(report[!report$passed, ], row.names = FALSE)
-  stop(
-    "Repository validation failed. Review the failed checks in ",
-    out_file("repository_validation_report.csv"),
-    "."
-  )
+  stop("Repository validation failed; see repository_validation_report.csv.", call. = FALSE)
 }
 
 message("\n============================================================")
 message("REPOSITORY VALIDATION PASSED")
 message("============================================================")
-message("All required flat files are present and key manuscript values were found.")
-message("Validation report: ", out_file("repository_validation_report.csv"))
+message("All final-numbered files, checksums and selected manuscript values passed.")

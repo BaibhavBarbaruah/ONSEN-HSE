@@ -12,6 +12,7 @@ stringr
 purrr
 tibble
 ggplot2
+ggseqlogo
 forcats
 scales
 patchwork
@@ -28,7 +29,7 @@ rtracklayer
 DESeq2
 Rsubread
 
-Observed package versions included:
+Observed package versions in the development environment included:
 Biostrings 2.74.1
 TFBSTools 1.44.0
 dplyr 1.1.4
@@ -37,4 +38,4 @@ readr 2.1.6
 purrr 1.2.0
 ggplot2 4.0.1
 
-Exact installed versions are captured by 09_write_session_info.R.
+Exact versions on a reproduction system are captured by 09_write_session_info.R.
