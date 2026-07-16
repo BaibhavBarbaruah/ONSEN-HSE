@@ -503,7 +503,7 @@ safe_write_csv(family_delta, "natural_variant_TF_family_delta_repository.csv")
 if (ONSEN_MAKE_FIGURES) {
   accession_order <- c("Col-0", "An-1", "C24", "Cvi", "Eri", "Kyo", "Ler", "Sha")
 
-  # Fig. S1A
+  # Fig. S5A
   s1a <- candidate_summary |>
     dplyr::select(
       accession, exact_seed_matches,
@@ -537,9 +537,9 @@ if (ONSEN_MAKE_FIGURES) {
       legend.position = "top",
       axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
     )
-  save_plot_pair(p_s1a, "FigS1A_accession_candidate_abundance", 7.0, 5.2)
+  save_plot_pair(p_s1a, "FigS5A_accession_candidate_abundance", 7.0, 5.2)
 
-  # Fig. S1B
+  # Fig. S5B
   hsf_candidates$accession <- factor(hsf_candidates$accession, levels = accession_order)
   p_s1b <- ggplot2::ggplot(
     hsf_candidates,
@@ -555,9 +555,9 @@ if (ONSEN_MAKE_FIGURES) {
       legend.position = "none",
       axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
     )
-  save_plot_pair(p_s1b, "FigS1B_accession_HSF_density", 7.0, 5.2)
+  save_plot_pair(p_s1b, "FigS5B_accession_HSF_density", 7.0, 5.2)
 
-  # Fig. S1C
+  # Fig. S5C
   proxy_plot <- proxy_summary
   names(proxy_plot) <- gsub(" ", "_", names(proxy_plot))
   paired_col <- c(
@@ -598,10 +598,10 @@ if (ONSEN_MAKE_FIGURES) {
       ggplot2::labs(x = "Count", y = "Accession", fill = NULL) +
       theme_onsen(12) +
       ggplot2::theme(legend.position = "top")
-    save_plot_pair(p_s1c, "FigS1C_paired_unpaired_proxies", 7.0, 5.2)
+    save_plot_pair(p_s1c, "FigS5C_paired_unpaired_proxies", 7.0, 5.2)
   }
 
-  # Fig. S2A
+  # Fig. S4A
   architecture$accession <- factor(architecture$accession, levels = accession_order)
   p_s2a <- ggplot2::ggplot(
     architecture,
@@ -616,9 +616,9 @@ if (ONSEN_MAKE_FIGURES) {
       legend.position = "none",
       axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
     )
-  save_plot_pair(p_s2a, "FigS2A_accession_HSE_architecture", 7.0, 5.2)
+  save_plot_pair(p_s2a, "FigS4A_accession_HSE_architecture", 7.0, 5.2)
 
-  # Fig. S2B scaled accession summary
+  # Fig. S4B scaled accession summary
   s2b_metrics <- candidate_summary |>
     dplyr::mutate(
       accession = factor(accession, levels = accession_order)
@@ -648,9 +648,9 @@ if (ONSEN_MAKE_FIGURES) {
     ggplot2::labs(x = NULL, y = "Accession") +
     theme_onsen(10) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-  save_plot_pair(p_s2b, "FigS2B_scaled_accession_summary", 9.0, 5.2)
+  save_plot_pair(p_s2b, "FigS4B_scaled_accession_summary", 9.0, 5.2)
 
-  # Fig. S2C HSF-model heatmap from exact processed model summary.
+  # Fig. S4C HSF-model heatmap from exact processed model summary.
   if (!is.na(hsf_model_summary_file)) {
     model_summary <- read_table_auto(hsf_model_summary_file)
     accession_col <- c("accession", "Accession")[
@@ -691,7 +691,7 @@ if (ONSEN_MAKE_FIGURES) {
         ggplot2::labs(x = "Arabidopsis HSF motif model", y = "Accession") +
         theme_onsen(10) +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-      save_plot_pair(p_s2c, "FigS2C_HSF_model_compatibility", 8.5, 5.2)
+      save_plot_pair(p_s2c, "FigS4C_HSF_model_compatibility", 8.5, 5.2)
     }
   }
 
