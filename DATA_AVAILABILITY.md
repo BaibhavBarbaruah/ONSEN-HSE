@@ -1,15 +1,17 @@
 # Data and code availability
 
-## RNA-seq generated for this study
+## Previously published RNA-seq reanalysed in this study
 
-DDBJ Sequence Read Archive project: **DRA013053**
+DDBJ Sequence Read Archive project: **DRA013053** (BioProject **PRJDB12424**).
 
-| Condition | Run accessions |
-|---|---|
-| Col-0 non-stressed controls | DRR328576, DRR328577, DRR328578 |
-| Col-0, 37°C for 24 h | DRR328579, DRR328580, DRR328581 |
+These libraries were generated for and first published by Nozawa et al. (2022), *Epigenetic regulation of ecotype-specific expression of a heat-activated transposon*. The present study reanalyses the six Col-0 libraries; it did not generate new RNA-seq libraries. The original study used the TruSeq RNA Sample Prep Kit v2 and paired-end 75-cycle sequencing on an Illumina NextSeq 500.
 
-The repository does not duplicate FASTQ/BAM files. Expected filenames and workflow roles are recorded in `INPUT_PROVENANCE.tsv`.
+| Condition | Run accessions | Experiment accessions |
+|---|---|---|
+| Col-0 non-stressed controls | DRR328576, DRR328580, DRR328584 | DRX317580, DRX317584, DRX317588 |
+| Col-0, 37°C for 24 h | DRR328577, DRR328581, DRR328585 | DRX317581, DRX317585, DRX317589 |
+
+The repository does not duplicate FASTQ/BAM files. The exact sample-to-accession map and workflow roles are recorded in `RNAseq_sample_metadata_template.csv` and `INPUT_PROVENANCE.tsv`.
 
 ## Public methylome
 
