@@ -1,7 +1,7 @@
-sample_id,treatment,condition,replicate,bam_filename,fastq_R1,fastq_R2
-Col0_NS_rep1,NS,Col-0 non-stressed,1,Col0_NS_rep1.bam,,
-Col0_NS_rep2,NS,Col-0 non-stressed,2,Col0_NS_rep2.bam,,
-Col0_NS_rep3,NS,Col-0 non-stressed,3,Col0_NS_rep3.bam,,
-Col0_HS_24h_37C_rep1,HS,Col-0 24-h 37C heat stress,1,Col0_HS_24h_37C_rep1.bam,,
-Col0_HS_24h_37C_rep2,HS,Col-0 24-h 37C heat stress,2,Col0_HS_24h_37C_rep2.bam,,
-Col0_HS_24h_37C_rep3,HS,Col-0 24-h 37C heat stress,3,Col0_HS_24h_37C_rep3.bam,,
+sample_id,treatment,condition,replicate,ecotype,run_accession,experiment_accession,dra_project,source_publication,bam_filename,fastq_R1,fastq_R2
+Col0_NS_rep1,NS,Col-0 non-stressed,1,Col-0,DRR328576,DRX317580,DRA013053,Nozawa et al. 2022,Col0_NS_rep1.bam,,
+Col0_NS_rep2,NS,Col-0 non-stressed,2,Col-0,DRR328580,DRX317584,DRA013053,Nozawa et al. 2022,Col0_NS_rep2.bam,,
+Col0_NS_rep3,NS,Col-0 non-stressed,3,Col-0,DRR328584,DRX317588,DRA013053,Nozawa et al. 2022,Col0_NS_rep3.bam,,
+Col0_HS_24h_37C_rep1,HS,Col-0 24-h 37C heat stress,1,Col-0,DRR328577,DRX317581,DRA013053,Nozawa et al. 2022,Col0_HS_24h_37C_rep1.bam,,
+Col0_HS_24h_37C_rep2,HS,Col-0 24-h 37C heat stress,2,Col-0,DRR328581,DRX317585,DRA013053,Nozawa et al. 2022,Col0_HS_24h_37C_rep2.bam,,
+Col0_HS_24h_37C_rep3,HS,Col-0 24-h 37C heat stress,3,Col-0,DRR328585,DRX317589,DRA013053,Nozawa et al. 2022,Col0_HS_24h_37C_rep3.bam,,
