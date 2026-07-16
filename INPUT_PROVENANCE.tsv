@@ -14,7 +14,7 @@ Col-0 HSF hits	Col0_ONSEN_LTRcandidate_JASPAR2026_Arabidopsis_HSF_hits.csv	Gener
 Strict TE coordinates	strict_TE_only_background_coordinates.csv	Generated from Araport11	Processed genomic input	1,942 strict non-ONSEN TE regions; Fig. 3; Tables S7-S8
 TE threshold summary	ONSEN_vs_strict_TE_only_background_threshold_0p85_0p90_summary.csv	Generated in study	Processed result	Fig. 3; Table S7
 TE statistics	ONSEN_vs_strict_TE_only_background_threshold_0p85_0p90_STATS.csv	Generated in study	Processed result	Wilcoxon/Cliff's delta; Table S7
-TE outlier annotations	strict_TE_background_annotated_with_HSF_outlier_classes.csv	Generated in study	Processed result	Fig. 3D
+TE outlier annotations	strict_TE_background_annotated_with_HSF_outlier_classes.csv	Generated in study	Processed result	Fig. 3D; density threshold set at the weakest ONSEN terminal window before ONSEN/ATCOPIA78 harmonisation
 Four-threshold regional metrics	Revision_R1_3_region_level_HSF_metrics_all_thresholds.csv	Generated in study	Processed result	Fig. S3; Table S8
 Continuous regional HSF scores	Revision_R1_3_region_level_continuous_HSF_scores.csv	Generated in study	Processed result	Fig. S3; Table S8
 Four-threshold statistics	Revision_R1_3_threshold_sensitivity_statistics.csv	Generated in study	Processed result	Fig. S3A; Table S8
@@ -22,19 +22,19 @@ Continuous-score statistics	Revision_R1_3_continuous_score_statistics.csv	Genera
 HSF model inventory	Revision_R1_3_HSF_model_inventory.csv	Generated in study	Processed metadata	JASPAR model IDs/widths used in Table S8 analysis
 Public methylome	GSM1085222_mC_calls_Col_0.tsv.gz	GEO GSE43857 / GSM1085222	Public data	Basal unstressed Col-0 leaf methylation; Fig. 4/Table S9
 ONSEN methylation coordinates	Figure5_ONSEN_LTR_candidate_coordinates.csv	Generated in study	Processed coordinate input	Fig. 4/Table S9
-HSF-rich TE outlier coordinates	Figure5_HSF_rich_non_ONSEN_TE_outlier_coordinates_ANNOTATED.csv	Generated in study	Processed coordinate input	Fig. 4/Table S9
+HSF-rich TE outlier coordinates	Figure5_HSF_rich_non_ONSEN_TE_outlier_coordinates_ANNOTATED.csv	Generated in study	Processed coordinate input	Fixed eight-region non-ONSEN subset; Figs. 4B-D and 5C; Tables S9-S10
 Ordinary-TE methylation summary	Revision_Fig4_ONSEN_vs_ordinary_TE_Col0_leaf_methylation_locus_summary.csv	Generated in study	Processed result	Fig. 4A/Table S9
 Ordinary-TE methylation statistics	Revision_Fig4_ONSEN_vs_ordinary_TE_Wilcoxon_BH_statistics.csv	Generated in study	Processed result	Fig. 4A/Table S9
-RNA-seq metadata	Col0_NS_vs_24h_37C_HS_sample_metadata.csv	Generated in study	Processed metadata	DRA013053; Fig. 5/Table S10
-RNA-seq alignments	Col0_NS_rep1.bam ... Col0_HS_24h_37C_rep3.bam	DRA013053	Generated sequencing/alignment	Six paired-end libraries; optional large-data step
-Gene counts	Col0_NS_vs_24h_37C_HS_gene_counts_raw.tsv	Generated in study	Processed count input	DESeq2/Fig. 5A
-Candidate-window counts	Col0_NS_vs_24h_37C_HS_candidate_ONSEN_HSF_rich_TE_loci_fractional_multimap_counts_annotated.tsv	Generated in study	Processed count input	Fig. 5B-C/Table S10
+RNA-seq metadata	Col0_NS_vs_24h_37C_HS_sample_metadata.csv	Nozawa et al. (2022); DRA013053	Public archive metadata	Validated six-library Col-0 sample map; Fig. 5/Table S10
+RNA-seq alignments	Col0_NS_rep1.bam ... Col0_HS_24h_37C_rep3.bam	Derived from DRA013053	Derived alignment from public RNA-seq	Six validated Col-0 paired-end libraries; optional large-data step
+Gene counts	Col0_NS_vs_24h_37C_HS_gene_counts_raw.tsv	Derived in present reanalysis	Processed count input	DESeq2/Fig. 5A
+Candidate-window counts	Col0_NS_vs_24h_37C_HS_candidate_ONSEN_HSF_rich_TE_loci_fractional_multimap_counts_annotated.tsv	Derived in present reanalysis	Processed count input	Fig. 5B-C/Table S10
 Candidate SAF	candidate_ONSEN_HSF_rich_TE_loci_for_featureCounts.saf	Generated in study	Processed coordinate input	Fractional multimapping-aware featureCounts
 Gene library summary	Col0_NS_vs_24h_37C_HS_gene_assigned_count_library_summary.tsv	Generated in study	Processed QC input	Candidate-signal normalization
 Accession candidate metadata	accession_ONSEN_like_HSE_candidate_windows_mismatch_leq4_metadata.csv	Generated in study	Processed result	Figs. 6, S4-S5; Tables S11-S12
 Accession candidate FASTA	accession_ONSEN_like_HSE_candidate_windows_mismatch_leq4_plusminus400bp.fasta	Generated in study	Processed sequence result	Natural-accession analysis
 Fixed accession HSF summary	FIXED_accession_ONSEN_like_mainchr_candidate_windows_JASPAR2026_Arabidopsis_HSF_candidate_summary_threshold_0.85.csv	Generated in study	Processed result	Figs. S4-S5; Table S11
-Paired proxy summary	putative_ONSEN_like_copy_proxy_summary_mismatch_leq4.csv	Generated in study	Processed result	Fig. S4/Table S11
+Paired proxy summary	putative_ONSEN_like_copy_proxy_summary_mismatch_leq4.csv	Generated in study	Processed result	Fig. S5/Table S11
 Natural variant accession summary	natural_accession_49bp_HSE_seed_variant_accession_summary.csv	Generated in study	Processed result	Fig. 6/Table S12
 Natural variant TF-family summary	natural_accession_variant_seed_TF_family_summary_long.csv	Generated in study	Processed result	Fig. 7/Table S13
 Random mutant library	constrained_HSE_mutant_library_n5000.csv	Generated in study	Processed sequence library	Fig. S1/Table S4
