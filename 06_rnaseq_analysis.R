@@ -1,5 +1,5 @@
 # Col-0 non-stressed versus 24-h 37C heat-stress RNA-seq analysis.
-# Covers Fig. 5 and source data for Table S7.
+# Covers Fig. 5 and source data for Table S10.
 # Candidate-window signal is fractional and multimapping-aware.
 
 source("ONSEN_functions.R")
@@ -11,6 +11,7 @@ message_config()
 run_alignment <- identical(tolower(Sys.getenv("ONSEN_RUN_ALIGNMENT", "false")), "true")
 run_counting <- identical(tolower(Sys.getenv("ONSEN_RUN_FEATURECOUNTS", "false")), "true")
 threads <- as.integer(Sys.getenv("ONSEN_THREADS", "8"))
+RNA_LOG2FC_PSEUDOCOUNT_CPM <- 0.05
 
 metadata_file <- find_any_input(c(
   "Col0_NS_vs_24h_37C_HS_sample_metadata.csv",
@@ -35,9 +36,50 @@ rename_meta <- function(x) {
 }
 sample_meta <- rename_meta(sample_meta)
 
+# DRA013053 contains interleaved Col-0 and Kyoto libraries. Require and
+# validate the exact six Col-0 run/experiment assignments before any analysis.
+assert_columns(
+  sample_meta,
+  c("sample_id", "treatment", "replicate", "ecotype",
+    "run_accession", "experiment_accession", "dra_project"),
+  "RNA-seq sample metadata with DDBJ provenance"
+)
+expected_accessions <- data.frame(
+  sample_id = c(
+    "Col0_NS_rep1", "Col0_NS_rep2", "Col0_NS_rep3",
+    "Col0_HS_24h_37C_rep1", "Col0_HS_24h_37C_rep2", "Col0_HS_24h_37C_rep3"
+  ),
+  treatment = c("NS", "NS", "NS", "HS", "HS", "HS"),
+  replicate = c(1L, 2L, 3L, 1L, 2L, 3L),
+  run_accession = c(
+    "DRR328576", "DRR328580", "DRR328584",
+    "DRR328577", "DRR328581", "DRR328585"
+  ),
+  experiment_accession = c(
+    "DRX317580", "DRX317584", "DRX317588",
+    "DRX317581", "DRX317585", "DRX317589"
+  ),
+  stringsAsFactors = FALSE
+)
+idx <- match(expected_accessions$sample_id, sample_meta$sample_id)
+if (nrow(sample_meta) != 6L || anyNA(idx)) {
+  stop("RNA-seq metadata must contain exactly the six validated Col-0 libraries.", call. = FALSE)
+}
+for (field in c("treatment", "replicate", "run_accession", "experiment_accession")) {
+  observed <- as.character(sample_meta[[field]][idx])
+  expected <- as.character(expected_accessions[[field]])
+  if (!identical(observed, expected)) {
+    stop("Incorrect DRA013053 Col-0 assignment in field: ", field, call. = FALSE)
+  }
+}
+if (!all(tolower(sample_meta$ecotype[idx]) %in% c("col-0", "col0")) ||
+    !all(sample_meta$dra_project[idx] == "DRA013053")) {
+  stop("RNA-seq metadata contains a non-Col-0 library or an incorrect DRA project.", call. = FALSE)
+}
+
 # --------------------------- Optional alignment -------------------------------
-# Adapter-trimmed FASTQ files were supplied by the sequencing provider.
-# Existing BAMs are normally used; alignment is disabled unless explicitly
+# Archived paired-end read files or derived BAMs are resolved from the validated metadata.
+# Alignment is disabled unless explicitly
 # requested through ONSEN_RUN_ALIGNMENT=true.
 if (run_alignment) {
   genome_fasta <- find_input("Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz")
@@ -397,6 +439,13 @@ class_stats <- class_replicate |>
     NS_mean = mean(mean_CPM_per_locus[treatment == "NS"], na.rm = TRUE),
     HS_mean = mean(mean_CPM_per_locus[treatment == "HS"], na.rm = TRUE),
     .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    log2FC_HS_vs_NS = log2(
+      (HS_mean + RNA_LOG2FC_PSEUDOCOUNT_CPM) /
+        (NS_mean + RNA_LOG2FC_PSEUDOCOUNT_CPM)
+    ),
+    fold_from_log2FC = 2^log2FC_HS_vs_NS
   )
 safe_write_csv(class_stats, "Fig5B_candidate_window_class_statistics_repository.csv")
 
@@ -406,7 +455,8 @@ window_summary <- candidate_long |>
   tidyr::pivot_wider(names_from = treatment, values_from = mean_CPM) |>
   dplyr::mutate(
     HS_signal_log2 = log2(HS + 1),
-    log2FC_HS_vs_NS = log2((HS + 1) / (NS + 1))
+    log2FC_HS_vs_NS = log2((HS + RNA_LOG2FC_PSEUDOCOUNT_CPM) /
+                              (NS + RNA_LOG2FC_PSEUDOCOUNT_CPM))
   ) |>
   dplyr::arrange(dplyr::desc(HS_signal_log2))
 safe_write_csv(window_summary, "Fig5C_individual_candidate_window_signal_repository.csv")
