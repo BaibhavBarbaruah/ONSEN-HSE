@@ -145,4 +145,37 @@ if (any(!report$passed)) {
 message("\n============================================================")
 message("REPOSITORY VALIDATION PASSED")
 message("============================================================")
+
+# Final-audit provenance and numbering checks.
+rna_meta <- read.csv(file.path(REPO_ROOT, "RNAseq_sample_metadata_template.csv"),
+                      check.names = FALSE, stringsAsFactors = FALSE)
+expected_runs <- c("DRR328576", "DRR328580", "DRR328584",
+                   "DRR328577", "DRR328581", "DRR328585")
+expected_experiments <- c("DRX317580", "DRX317584", "DRX317588",
+                          "DRX317581", "DRX317585", "DRX317589")
+add_check("RNA-seq template has six Col-0 libraries",
+          nrow(rna_meta) == 6L && all(rna_meta$ecotype == "Col-0"),
+          "Expected exactly six Col-0 rows")
+add_check("RNA-seq DRA run map is exact",
+          identical(rna_meta$run_accession, expected_runs),
+          "Unexpected DRA013053 run assignment")
+add_check("RNA-seq DRA experiment map is exact",
+          identical(rna_meta$experiment_accession, expected_experiments),
+          "Unexpected DRA013053 experiment assignment")
+
+accession_code <- paste(readLines(file.path(REPO_ROOT, "07_accession_analysis.R"),
+                                  warn = FALSE), collapse = "\n")
+add_check("Final Fig. S4 output naming",
+          grepl("FigS4A_accession_HSE_architecture", accession_code, fixed = TRUE),
+          "Fig. S4 code/output mapping is not synchronized")
+add_check("Final Fig. S5 output naming",
+          grepl("FigS5A_accession_candidate_abundance", accession_code, fixed = TRUE),
+          "Fig. S5 code/output mapping is not synchronized")
+
+s9d <- file.path(REPO_ROOT,
+                 "supplementary_table_source/Table_S9__S9D_selected_outliers.tsv")
+add_check("Table S9 exact downstream outlier set is deposited",
+          file.exists(s9d) && sum(grepl("^ATHILA|^ATCOPIA", readLines(s9d))) == 8L,
+          "Expected eight selected non-ONSEN TE rows")
+
 message("All final-numbered files, checksums and selected manuscript values passed.")
