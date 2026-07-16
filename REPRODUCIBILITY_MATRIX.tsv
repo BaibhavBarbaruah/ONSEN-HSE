@@ -12,8 +12,8 @@ Fig. 7D	Representative HSF and DOF JASPAR logos	07B_figure7_identity_and_logo_wo
 Fig. S1A-C	Constrained-mutant and exact-GC sensitivity	02_constrained_mutant_sensitivity.R	Step2B/Step2C outputs or regenerated design libraries	FigS1A-C panel PDF/PNG files	covered
 Fig. S2	Raw versus non-redundant HSF locations	04_nonredundant_HSF_locations.R	49-bp and copy-wide HSF hit tables	FigS2 panel PDF/PNG files	covered
 Fig. S3A-C	Threshold sensitivity and continuous regional scores	03B_threshold_and_continuous_sensitivity.R	strict TE coordinates; TAIR10; JASPAR HSF PWMs	FigS3_HSF_threshold_and_continuous_scores.pdf/png; source_data/S8A, S8B and S8D TSV files; generated S8C_region_metrics.tsv.gz	covered
-Fig. S4A-C	Accession candidate abundance, HSF density and proxies	07_accession_analysis.R	accession candidate/proxy summaries	FigS4A-C panel PDF/PNG files	covered
-Fig. S5A-C	Additional accession HSE/HSF summaries	07_accession_analysis.R	candidate architecture and HSF summaries	FigS5A-C panel PDF/PNG files	covered
+Fig. S4A-C	Additional accession HSE architecture, scaled summaries and HSF-model compatibility	07_accession_analysis.R	candidate architecture and HSF-model summaries	FigS4A-C panel PDF/PNG files	covered
+Fig. S5A-C	Accession candidate abundance, HSF density and structural proxies	07_accession_analysis.R	accession candidate/proxy summaries	FigS5A-C panel PDF/PNG files	covered
 Table S1	Motif effects and family summary	01_native_mutated_motif_analysis.R; 08_write_supplementary_tables.R	motif effects/family summaries	Table_S1.xlsx	covered
 Table S2	HSF models below threshold	01_native_mutated_motif_analysis.R; 08_write_supplementary_tables.R	HSF best scores	Table_S2.xlsx	covered
 Table S3	AP2/ERF models gained/strengthened	01_native_mutated_motif_analysis.R; 08_write_supplementary_tables.R	motif gain/loss	Table_S3.xlsx	covered
