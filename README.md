@@ -22,8 +22,8 @@ The final supplementary order is:
 | Fig. S1 / Table S4 | constrained-mutant and exact-GC sensitivity |
 | Fig. S2 / Table S6 | raw versus non-redundant HSF-compatible locations |
 | Fig. S3 / Table S8 | HSF threshold sensitivity and continuous regional scores |
-| Fig. S4 / Table S11 | accession candidate abundance, HSF density and structural proxies |
-| Fig. S5 | additional accession-level HSE/HSF summaries |
+| Fig. S4 | additional accession-level HSE architecture, scaled summaries and HSF-model compatibility |
+| Fig. S5 / Table S11 | accession candidate abundance, HSF density and structural proxies |
 | Table S1-S3 | native-versus-designed 49-bp motif analyses |
 | Table S5 | Col-0 terminal-window HSF summary |
 | Table S7 | strict TE-background comparison |
@@ -158,7 +158,7 @@ Position frequency matrices were converted to log2 probability-ratio PWMs using:
 
 The primary high-confidence threshold is `0.85`. Robustness analyses additionally use `0.80`, `0.90` and `0.95`, together with threshold-independent regional score summaries.
 
-The representative Fig. 7D logos use:
+The representative Fig. 7D logos are illustrative and are distinct from the JASPAR 2026 HSFC1 MA1667.3 model used in the primary HSF-focused scan. They use:
 
 - HSF family: **HSFC1, JASPAR MA1667.2**
 - DOF family: **DOF1.8, JASPAR MA0981.2**
